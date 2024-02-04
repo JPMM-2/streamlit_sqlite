@@ -3,7 +3,7 @@ from sqlite3 import Error
 import pandas as pd
 import streamlit as st
 
-db_file='northwind.db'
+db_file='northwind2.db'
 conn = sqlite3.connect(db_file)
 cur = conn.cursor()
 
