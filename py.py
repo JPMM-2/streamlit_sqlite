@@ -23,20 +23,17 @@ db_file='northwind.db'
 conn = sqlite3.connect(db_file)
 cur = conn.cursor()
 
-tbl = st.sidebar.selectbox('Select the table', list_tbl)
+sql_str = "SELECT name FROM sqlite_master where type = 'table'"
+curr=cur.execute(sql_str)
+df=pd.DataFrame(curr)
+lst = list(df)
 
+tbl = st.sidebar.selectbox('Select the table', df[0].tolist())
 sql_str     = 'select * from ' + str(tbl) 
 
-#where symbol= + symbol
-
 curr=cur.execute(sql_str)
-
-
 df=pd.DataFrame(curr)
 
-
-
-print (df)
-
+#print ()
 
 st.dataframe(df)
