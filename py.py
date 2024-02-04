@@ -3,44 +3,49 @@ from sqlite3 import Error
 import pandas as pd
 import streamlit as st
 
-db_file='northwind2.db'
+db_file='northwind.db'
 conn = sqlite3.connect(db_file)
 cur = conn.cursor()
 
-st.write('Below is a DataFrame:')
 
 name = st.sidebar.text_input('mete tu nombre')
-password = st.sidebar.text_input('mete tu contrasena')
+st.session_state['password'] = st.sidebar.text_input('mete tu contrasena')
 
+i = 5
 
-
-if st.button('login'):
-
-
-	sql_str = "select * from users where name = '" + str(name) + "' and password = " + str(password)
-
-	print(sql_str)
-
+if st.session_state['password'] not in st.session_state:
+	sql_str = "select * from users where name = '" + str(name) + "' and password = " + str(st.session_state['password'])
+	i = 25
 	curr=cur.execute(sql_str)
 	df=pd.DataFrame(curr)
+	sp = df.shape[0]
+else:
+	i = 7
 
 
-	if df.shape[0] == 1:
+if sp == 1:
+	
+    sql_str = "insert into users values ('qqqq',8521)"
+    cur.execute(sql_str)
+    conn.commit()
+        
+    
+    sql_str = "SELECT name FROM sqlite_master where type = 'table'" 
+    curr=cur.execute(sql_str)
+    df=pd.DataFrame(curr)
+    lst = df[0].tolist()
 
-		sql_str = "SELECT name FROM sqlite_master where type = 'table'"
-		curr=cur.execute(sql_str)
-		df=pd.DataFrame(curr)
-		lst = df[0].tolist()
+    tbl = st.sidebar.selectbox('Select the table', lst)
+    sql_str     = 'select * from ' + str(tbl) 
 
-		tbl = st.sidebar.selectbox('Select the table', lst)
-		sql_str     = 'select * from ' + str(tbl) 
+    curr=cur.execute(sql_str)
+    df=pd.DataFrame(curr)
 
-		curr=cur.execute(sql_str)
-		df=pd.DataFrame(curr)
+	#print (lst)
 
-		#print (lst)
-
-		st.dataframe(df)
-		
-	elif df.shape[0] == 0:
-		st.sidebar.write('you do not have access to the tool')
+    st.dataframe(df)
+	
+elif sp == 0:
+	st.sidebar.write('you do not have access to the tool')
+	
+st.write(i)
