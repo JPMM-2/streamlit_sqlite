@@ -19,16 +19,11 @@ if st.session_state['password'] not in st.session_state:
 	curr=cur.execute(sql_str)
 	df=pd.DataFrame(curr)
 	sp = df.shape[0]
-else:
-	i = 7
 
-
-if sp == 1:
-	
+if sp >= 1:	
     sql_str = "insert into users values ('qqqq',8521)"
     cur.execute(sql_str)
-    conn.commit()
-        
+    conn.commit()        
     
     sql_str = "SELECT name FROM sqlite_master where type = 'table'" 
     curr=cur.execute(sql_str)
